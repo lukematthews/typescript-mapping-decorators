@@ -1,9 +1,17 @@
 import { mapToNamespace } from "./Mapped";
 import { Person } from "./model/Person";
 
-const person: Person = { name: "Luke", dob: "10/2/1981", age: 43 };
-const to = {};
+let person = new Person();
+person.name = "Luke";
+person.dob = "10/2/1981";
+person.age = 43;
 
-mapToNamespace(person, to, "DB", 'Person');
+let to = {};
+mapToNamespace<Person>(person, to, "DB");
+console.log(`DB: ${JSON.stringify(to)}`);
 
-console.log(`to: ${to} ${JSON.stringify(to)}`);
+
+person =  { name: "Luke", dob: "10/2/1981", age: 43};
+to = {};
+mapToNamespace<Person>(person, to, "userInterface", "Person");
+console.log(`userInterface: ${JSON.stringify(to)}`);

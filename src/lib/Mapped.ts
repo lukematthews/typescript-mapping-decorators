@@ -1,13 +1,21 @@
 const mapperMetadataStorage = new Map<string, MappedOptions[]>();
 
+/**
+ * @field field This is the field you want to map to. This can either be a string
+ * which will directly map the value onto the target object. The other option is to
+ * use a function. The function can be typed so you can use intellisense to map onto
+ * a specific field on an object. This function could also do type conversion or any
+ * other customer logic required.
+ * @field namespace This is which namespace to apply a mapping to. For example, you
+ * might have different naming conventions or logic between a database and a user
+ * interface.
+ */
 export interface MappedOptions {
-  field: string | ((out: any, val: any) => void);
+  field: string | ((to: any, val: any) => void);
   namespace: string;
 }
 
 /**
- * '@Mapped'
- * 
  * This decorator is used to specify how a field should be mapped to a target object.
  * 
  * You can have different logic for mapping properties to different namespaces.
@@ -31,28 +39,16 @@ export function Mapped(className: string, ...options: MappedOptions[]) {
   };
 }
 
-export const classNames = new WeakMap<object, string>();
-
-export function MappedToNamespace() {
-  return function (target: any, _context: ClassDecoratorContext) {
-    classNames.set(target.prototype, target.name);
-  };
-}
-
-export function getMetadata(target: any, propertyName: string) {
-  const key = `Mapped_${target.constructor.name}_${propertyName}`;
-  return mapperMetadataStorage.get(key);
-}
-
-export function mapToNamespace(
-  from: any,
+export function mapToNamespace<F extends object>(
+  from: F,
   to: any,
   namespace: string,
-  fromClass: string
+  fromClass?: string
 ) {
+  const className = fromClass ? fromClass : from.constructor.name;
   Object.entries(from).forEach(([key, value]) => {
     mapperMetadataStorage
-      .get(`Mapped_${String(fromClass)}_${key}`)
+      .get(`Mapped_${String(className)}_${key}`)
       ?.filter((option) => option.namespace === namespace)
       ?.forEach((option) => {
         if (typeof option.field === "function") {
@@ -63,31 +59,3 @@ export function mapToNamespace(
       });
   });
 }
-
-class Person {
-  @Mapped(
-    "Person",
-    { field: "FULL_NAME", namespace: "DB" },
-    { field: "commonName", namespace: "userInterface" }
-  )
-  name: string | undefined;
-  @Mapped(
-    "Person",
-    {
-      field: (out: any, val: any) => {
-        out["DATE_OF_BIRTH"] = val;
-      },
-      namespace: "DB"
-    },
-    { field: "commonName", namespace: "userInterface" }
-  )
-  dob: string | null | undefined;
-}
-
-class Human {}
-
-const person: Person = { name: "Luke", dob: "10/2/1981" };
-const to = new Human();
-
-mapToNamespace(person, to, "DB", "Person");
-console.log(JSON.stringify(to));

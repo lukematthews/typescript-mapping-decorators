@@ -1,4 +1,4 @@
-import { Mapped } from "../Mapped";
+import { Mapped, MappedOptions } from "../Mapped";
 
 export class Person {
   @Mapped(
@@ -15,7 +15,7 @@ export class Person {
       },
       namespace: "DB"
     },
-    { field: "commonName", namespace: "userInterface" }
+    { field: "dateOfBirth", namespace: "userInterface" }
   )
   dob: string | null | undefined;
   age: number | null | undefined;
