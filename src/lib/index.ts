@@ -1,3 +1,5 @@
+// export { Mapped, Field, MappedClass, MappedClassOptions, MappedOptions, mapToNamespace } from "./Mapped";
+
 import { mapToNamespace } from "./Mapped";
 import { Person } from "./model/Person";
 import { ConstantCase } from "./model/ConstantCase";

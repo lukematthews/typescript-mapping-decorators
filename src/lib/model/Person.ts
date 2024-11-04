@@ -1,5 +1,6 @@
-import { Mapped, MappedOptions } from "../Mapped";
+import { Mapped, MappedClass } from "../Mapped";
 
+@MappedClass({ namespace: 'DB', prefix: 'ZIM_$1', casing: 'constantCase'  })
 export class Person {
   @Mapped(
     "Person",
