@@ -1,18 +1,16 @@
-import { Mapped, MappedClass } from "../Mapped";
+import { Field, Mapped } from "../Mapped";
 
-@MappedClass({ namespace: 'DB', prefix: 'ZIM_$1', casing: 'constantCase'  })
+@Mapped({ namespace: 'DB', prefix: 'ZIM_$1', casing: 'constantCase'  })
 export class Person {
-  @Mapped(
-    "Person",
+  @Field(
     { field: "FULL_NAME", namespace: "DB" },
     { field: "commonName", namespace: "userInterface" }
   )
   name: string | undefined;
-  @Mapped(
-    "Person",
+  @Field(
     {
       field: (out: any, val: any) => {
-        out["DATE_OF_BIRTH"] = val;
+        out.age = { full: val };
       },
       namespace: "DB"
     },

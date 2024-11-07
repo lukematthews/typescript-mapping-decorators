@@ -4,8 +4,8 @@
   "exclude": ["node_modules", "src/lib/**/*.spec.ts"],
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "ES6",
-    "lib": ["ES6"],
+    "target": "ES2022",
+    "lib": ["ES2022", "ESNext.Decorators", "DOM"],
     // "moduleResolution": "",
     // "allowSyntheticDefaultImports": true,
     "declaration": true,
